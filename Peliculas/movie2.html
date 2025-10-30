@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Abracadabra 2</title>
+  <link href="https://fonts.googleapis.com/css2?family=Netflix+Sans:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { background:#000; color:#fff; font-family:'Netflix Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; overflow-x:hidden; line-height:1.5; }
+    .backdrop { position:fixed; top:0; left:0; right:0; bottom:0;
+      background:linear-gradient(to bottom,rgba(0,0,0,0.7)0%,rgba(0,0,0,0.9)100%),url('https://image.tmdb.org/t/p/original/ml8YBTJq7UkALfI022FWscCQuQW.jpg') center/cover no-repeat;
+      filter:blur(8px) brightness(0.6); z-index:-1; transform:scale(1.1); }
+    .container { max-width:480px; margin:0 auto; padding:0 16px; }
+    .header { padding-top:60px; text-align:center; position:relative; }
+    .poster { width:160px; height:240px; border-radius:8px; overflow:hidden; margin:0 auto 16px;
+      box-shadow:0 8px 24px rgba(0,0,0,0.6); border:1px solid rgba(255,255,255,0.1); }
+    .poster img { width:100%; height:100%; object-fit:cover; }
+    .movie-logo { margin:12px auto; max-width:200px; max-height:60px; object-fit:contain;
+      filter:drop-shadow(0 2px 4px rgba(0,0,0,0.8)); display:block; }
+    .title { font-size:28px; font-weight:900; margin-bottom:8px; text-shadow:0 2px 4px rgba(0,0,0,0.8); }
+    .meta { font-size:14px; color:#aaa; margin-bottom:16px; }
+    .meta span { margin-right:12px; }
+    .match { color:#46d369; font-weight:700; }
+    .actions { display:flex; justify-content:center; gap:16px; margin:24px 0; }
+    .btn { display:flex; flex-direction:column; align-items:center; gap:6px;
+      background:none; border:none; color:#fff; font-size:12px; font-weight:500;
+      cursor:pointer; transition:transform .2s ease; }
+    .btn:active { transform:scale(0.92); }
+    .btn-icon { width:52px; height:52px; border-radius:50%; background:rgba(255,255,255,0.15);
+      display:flex; align-items:center; justify-content:center; font-size:20px; transition:all .2s ease; }
+    .btn-play .btn-icon { background:#fff; color:#000; font-size:24px; }
+    .btn:hover .btn-icon, .btn:active .btn-icon { background:rgba(255,255,255,0.3); }
+    .btn-play:hover .btn-icon { background:#e6e6e6; }
+    .btn-download { margin-top:16px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.3);
+      color:#fff; padding:12px 24px; border-radius:4px; font-weight:600; width:100%;
+      font-size:15px; display:flex; align-items:center; justify-content:center; gap:8px;
+      transition:all .2s ease; }
+    .btn-download:active { background:rgba(255,255,255,0.2); transform:scale(0.98); }
+    .synopsis { font-size:15px; color:#ccc; line-height:1.6; margin:24px 0; }
+    .synopsis-title { color:#fff; font-weight:700; margin-bottom:8px; font-size:16px; }
+    #infoModal, #videoModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+      background:rgba(0,0,0,0.7); backdrop-filter:blur(6px); z-index:9999;
+      justify-content:center; align-items:center; padding:16px; box-sizing:border-box; }
+    #infoModal > div, #videoModal > div { background:#111; padding:24px; border-radius:12px;
+      max-width:400px; width:90%; max-height:80%; overflow-y:auto; position:relative; }
+    #closeModal, #closeVideoModal { position:absolute; top:12px; right:12px; background:none;
+      border:none; color:#fff; font-size:20px; cursor:pointer; }
+    #videoModal::before { content:''; position:absolute; top:0; left:0; right:0; bottom:0;
+      background:url('https://image.tmdb.org/t/p/original/ml8YBTJq7UkALfI022FWscCQuQW.jpg') center/cover; filter:blur(20px) brightness(0.3); z-index:-1; }
+    #videoModal > div { background:#000; box-shadow:0 20px 40px rgba(0,0,0,0.8); }
+    .video-container { position:relative; padding-bottom:56.25%; height:0; overflow:hidden; }
+    #videoFrameModal { position:absolute; top:0; left:0; width:100%; height:100%; border:none; }
+    .info-grid { display:grid; gap:8px; font-size:14px; }
+    .info-grid p { margin:0; }
+    .info-grid strong { color:#aaa; }
+    @media (max-width:380px) {
+      .title { font-size:24px; }
+      .poster { width:140px; height:210px; }
+      .actions { gap:12px; }
+      .btn-icon { width:48px; height:48px; }
+      .movie-logo { max-width:160px; max-height:50px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="backdrop"></div>
+  <div class="container">
+    <div class="header">
+      <div class="poster"><img src="https://image.tmdb.org/t/p/original/qBP6dwX2S74CwGn76jAnBn0Kube.jpg" alt="Abracadabra 2"></div>
+      <img src="https://image.tmdb.org/t/p/w300/9G1KxftgQsXDIgLUXU0bTZchfpU.png" alt="Logo Abracadabra 2" class="movie-logo">
+      <h1 class="title">Abracadabra 2</h1>
+      <div class="meta">
+        <p><span>Año: 2022</span></p>
+        <span class="match">72% para ti</span>
+        <span>1h 45min</span>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-play" id="btnReproducir">
+        <div class="btn-icon"><i class="fas fa-play"></i></div><span>Reproducir</span>
+      </button>
+      <button class="btn" id="btnLista">
+        <div class="btn-icon"><i class="fas fa-plus"></i></div><span>Mi lista</span>
+      </button>
+      <button class="btn" id="btnInfo">
+        <div class="btn-icon"><i class="fas fa-info"></i></div><span>Info</span>
+      </button>
+    </div>
+    <button class="btn-download" id="download-btn" data-url="">
+      <i class="fas fa-download"></i> Descargar
+    </button>
+    <div class="synopsis" id="synopsis">
+      <div class="synopsis-title">Sinopsis</div>
+      <p id="synopsisText">Han pasado 29 años desde que alguien encendió la vela de flama negra resucitando a las hermanas Sanderson del siglo 17, y ahora quieren venganza. Serán tres estudiantes de secundaria quienes deberán evitar que las voraces brujas siembren el caos en Salem durante la noche de Halloween.</p>
+      <button id="toggleSynopsis" style="display:none;background:none;border:none;color:#46d369;font-weight:700;cursor:pointer;margin-top:8px;">Ver más</button>
+    </div>
+    <!-- MODAL INFO -->
+    <div id="infoModal">
+      <div>
+        <button id="closeModal"><i class="fas fa-times"></i></button>
+        <div class="info-grid">
+          <p><strong>Director:</strong> Anne Fletcher</p>
+          <p><strong>Género:</strong> Fantasía, Comedia, Familia</p>
+          <p><strong>País:</strong> United States of America</p>
+          <p><strong>Título Original:</strong> Hocus Pocus 2</p>
+          <p><strong>Eslogan:</strong> Brujas, volvimos.</p>
+          <p><strong>Presupuesto:</strong> $30.000.000</p>
+          <p><strong>Ingresos:</strong> $0</p>
+          <p><strong>Calificación:</strong> 7.2 / 10</p>
+          <p><strong>Duración:</strong> 1h 45min</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="videoModal">
+    <div>
+      <button id="closeVideoModal"><i class="fas fa-times"></i></button>
+      <div class="video-container">
+        <iframe id="videoFrameModal" src="" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+  <script>
+    const VIDEO_URL = "";
+    const btnReproducir = document.getElementById('btnReproducir');
+    const videoModal = document.getElementById('videoModal');
+    const videoFrameModal = document.getElementById('videoFrameModal');
+    const closeVideoModal = document.getElementById('closeVideoModal');
+    btnReproducir.addEventListener('click', () => {
+      videoFrameModal.src = VIDEO_URL;
+      videoModal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    });
+    const closeModal = () => {
+      videoModal.style.display = 'none';
+      videoFrameModal.src = '';
+      document.body.style.overflow = '';
+    };
+    closeVideoModal.addEventListener('click', closeModal);
+    videoModal.addEventListener('click', e => e.target === videoModal && closeModal());
+    document.getElementById('download-btn').addEventListener('click', e => {
+      e.preventDefault();
+      const url = e.currentTarget.dataset.url;
+      if (!url) return alert('No hay enlace de descarga');
+      const clean = url.replace(/^https?:\/\//, '');
+      location.href = 'intent://' + clean + '#Intent;package=idm.internet.download.manager.plus;scheme=https;end';
+      setTimeout(() => location.href = 'intent://' + clean + '#Intent;package=idm.internet.download.manager;scheme=https;end', 1000);
+    });
+    const btnInfo = document.getElementById('btnInfo');
+    const infoModal = document.getElementById('infoModal');
+    const closeModalBtn = document.getElementById('closeModal');
+    btnInfo.addEventListener('click', () => infoModal.style.display = 'flex');
+    closeModalBtn.addEventListener('click', () => infoModal.style.display = 'none');
+    infoModal.addEventListener('click', e => e.target === infoModal && (infoModal.style.display = 'none'));
+    const synopsisText = document.getElementById('synopsisText');
+    const toggleSynopsis = document.getElementById('toggleSynopsis');
+    const maxLength = 200;
+    if (synopsisText.textContent.length > maxLength) {
+      const full = synopsisText.textContent;
+      const short = full.slice(0, maxLength) + '...';
+      synopsisText.textContent = short;
+      toggleSynopsis.style.display = 'inline-block';
+      let expanded = false;
+      toggleSynopsis.addEventListener('click', () => {
+        synopsisText.textContent = expanded ? short : full;
+        toggleSynopsis.textContent = expanded ? 'Ver más' : 'Ver menos';
+        expanded = !expanded;
+      });
+    }
+    function extractMovieData() {
+      const pageUrl = window.location.href.split('#')[0].split('?')[0];
+      return { title:'Abracadabra 2', year:'2022', backdrop:'https://image.tmdb.org/t/p/original/ml8YBTJq7UkALfI022FWscCQuQW.jpg', pageUrl };
+    }
+    document.getElementById('btnLista').addEventListener('click', e => {
+      const btn = e.currentTarget;
+      const icon = btn.querySelector('i');
+      const txt = btn.querySelector('span');
+      const data = extractMovieData();
+      if (!data.pageUrl) return alert('Error al obtener datos.');
+      try {
+        let lista = JSON.parse(localStorage.getItem('miLista')) || [];
+        const exists = lista.some(m => m.url === data.pageUrl);
+        if (!exists) {
+          lista.push({ ...data, addedAt: new Date().toISOString() });
+          localStorage.setItem('miLista', JSON.stringify(lista));
+          icon.classList.replace('fa-plus','fa-check');
+          txt.textContent = 'Añadido';
+        } else {
+          lista = lista.filter(m => m.url !== data.pageUrl);
+          localStorage.setItem('miLista', JSON.stringify(lista));
+          icon.classList.replace('fa-check','fa-plus');
+          txt.textContent = 'Mi lista';
+        }
+      } catch (err) { alert('Error al guardar en Mi lista.'); }
+    });
+    (function initListaBtn(){
+      const btn = document.getElementById('btnLista');
+      if (!btn) return;
+      const data = extractMovieData();
+      try {
+        const lista = JSON.parse(localStorage.getItem('miLista')) || [];
+        if (lista.some(m => m.url === data.pageUrl)) {
+          btn.querySelector('i').classList.replace('fa-plus','fa-check');
+          btn.querySelector('span').textContent = 'Añadido';
+        }
+      } catch (err) {}
+    })();
+  </script>
+</body>
+</html>
