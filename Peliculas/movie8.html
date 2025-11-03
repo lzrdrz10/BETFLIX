@@ -60,12 +60,12 @@
 
   <div class="container">
     <div class="header">
-      <div class="poster"><img src="https://www.themoviedb.org/t/p/w600_and_h900_bestv2/vJi2ExTcWdJR3150VPKqqtdGxsT.jpg" alt="The Cloverfield Paradox"></div>
+      <div class="poster"><img src="https://image.tmdb.org/t/p/w500/hyeJDZxsXatr2XoPtH46NRrQ6aW.jpg" alt="The Cloverfield Paradox"></div>
       <img src="https://image.tmdb.org/t/p/original/pa7qShs8YSMQvQTpeiaJD2YYU5q.png" class="movie-logo">
       <h1 class="title">The Cloverfield Paradox</h1>
       <div class="meta">
         <span>Año: 2018</span>
-        <span class="match">87% para ti</span>
+        <span class="match">85% para ti</span>
         <span>102 min</span>
       </div>
     </div>
@@ -100,56 +100,41 @@
         <i class="fas fa-times"></i>
       </button>
       <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;">
-        <iframe id="videoFrameModal" src="" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;"></iframe>
+        <iframe id="videoFrameModal" src="https://lzrdrz10.github.io/repro/player.html?video=aHR0cHM6Ly8xYS0xNzkxLmNvbS92aWRlby9md2UyLzg1L3M4LzIvNi8yL0svcS82Mktxei5hYWEubXA0&poster=aHR0cHM6Ly9pbWFnZS50bWRiLm9yZy90L3Avb3JpZ2luYWwvMmNuVUNjTm1tajc5aEdtaW12V2xVbzVQMks4LmpwZw==&title=TGEgUGFyYWRvamEgQ2xvdmVyZmllbGQ=" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;"></iframe>
       </div>
     </div>
   </div>
 
  <script>
   var VIDEO_URL = "https://lzrdrz10.github.io/repro/player.html?video=aHR0cHM6Ly8xYS0xNzkxLmNvbS92aWRlby9md2UyLzg1L3M4LzIvNi8yL0svcS82Mktxei5hYWEubXA0&poster=aHR0cHM6Ly9pbWFnZS50bWRiLm9yZy90L3Avb3JpZ2luYWwvMmNuVUNjTm1tajc5aEdtaW12V2xVbzVQMks4LmpwZw==&title=TGEgUGFyYWRvamEgQ2xvdmVyZmllbGQ=";
+  var videodescargador = "https://example.com/video.mp4";
 
-  // Botones y elementos
+  // === Elementos reales que SÍ existen ===
   var btnReproducir = document.getElementById('btnReproducir');
   var videoModal = document.getElementById('videoModal');
   var videoFrameModal = document.getElementById('videoFrameModal');
   var closeVideoModal = document.getElementById('closeVideoModal');
-
   var downloadBtn = document.getElementById('download-btn');
   var castBtn = document.getElementById('btnCast');
   var btnLista = document.getElementById('btnLista');
-
-  var infoModal = document.getElementById('infoModal');
   var btnInfo = document.getElementById('btnInfo');
-  var closeModalBtn = document.getElementById('closeModal');
-
   var synopsisText = document.getElementById('synopsisText');
   var toggleSynopsis = document.getElementById('toggleSynopsis');
   var maxLength = 200;
 
-  // Datos extraídos del comentario <!-- Datos -->
-  var movieData = {
-    backdrop: "https://image.tmdb.org/t/p/original/2cnUCcNmmj79hGmimvWlUo5P2K8.jpg",
-    year: "2018",
-    titulo: "The Cloverfield Paradox",
-    poster: "https://image.tmdb.org/t/p/w500/hyeJDZxsXatr2XoPtH46NRrQ6aW.jpg",
-    generos: "Terror, Suspense, Ciencia ficción",
-    calificacion: "87%",
-    sinopsis: "Con la Tierra en guerra y en mitad de una crisis energética, un equipo de astronautas se encuentra en el espacio tratando de dar con una solución a los problemas del planeta. Pero durante una maniobra fallida, quedan flotando sin saber muy bien qué o cómo volver a su lugar de origen, y las cosas dentro de la nave ocultan una realidad mucho más terrorífica.",
-    tiempo: "102 min",
-    logo: "https://image.tmdb.org/t/p/original/pa7qShs8YSMQvQTpeiaJD2YYU5q.png"
-  };
-
-  // === Reproducir video ===
+  // === Reproducir ===
   btnReproducir.addEventListener('click', function() {
     videoFrameModal.src = VIDEO_URL;
     videoModal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
   });
+
   closeVideoModal.addEventListener('click', function() {
     videoModal.style.display = 'none';
     videoFrameModal.src = '';
     document.body.style.overflow = '';
   });
+
   videoModal.addEventListener('click', function(e) {
     if (e.target === videoModal) {
       videoModal.style.display = 'none';
@@ -158,70 +143,75 @@
     }
   });
 
-  // === Descargar (1DM / 1DM+) ===
+  // === Descargar ===
   downloadBtn.addEventListener('click', function(e) {
     e.preventDefault();
-    var url = e.currentTarget.dataset.url;
-    if (!url) return alert('No hay enlace de descarga');
+    var url = videodescargador;
+    if (!url || url.includes('example.com')) {
+      alert('No hay enlace de descarga disponible');
+      return;
+    }
     var clean = url.replace(/^https?:///, '');
     var intentPlus = 'intent://' + clean + '#Intent;package=idm.internet.download.manager.plus;scheme=https;end';
     var intentNormal = 'intent://' + clean + '#Intent;package=idm.internet.download.manager;scheme=https;end';
     window.location.href = intentPlus;
-    setTimeout(function() { window.location.href = intentNormal; }, 1000);
+    setTimeout(() => window.location.href = intentNormal, 1000);
   });
 
-  // === Cast (Web Video Caster) ===
+  // === Cast ===
   castBtn.addEventListener('click', function() {
-    var cleanCast = VIDEO_URL.replace(/^https?:///, '');
-    var castIntent = 'intent://' + cleanCast + '#Intent;package=com.instantbits.cast.webvideo;scheme=https;end';
-    window.open(castIntent, '_blank');
-  });
-
-  // === Mi lista (guardar datos + URL) ===
-  btnLista.addEventListener('click', function() {
-    try {
-      var lista = JSON.parse(localStorage.getItem('miLista')) || [];
-      var exists = lista.some(m => m.pageUrl === window.location.href);
-      if (!exists) {
-        lista.push({ ...movieData, pageUrl: window.location.href, addedAt: new Date().toISOString() });
-        localStorage.setItem('miLista', JSON.stringify(lista));
-        btnLista.querySelector('i').classList.replace('fa-plus','fa-check');
-        btnLista.querySelector('span').textContent = 'Añadido';
-      } else {
-        lista = lista.filter(m => m.pageUrl !== window.location.href);
-        localStorage.setItem('miLista', JSON.stringify(lista));
-        btnLista.querySelector('i').classList.replace('fa-check','fa-plus');
-        btnLista.querySelector('span').textContent = 'Mi lista';
-      }
-    } catch(err) {
-      alert('Error al guardar en Mi lista.');
-      console.error(err);
+    if (!VIDEO_URL.includes('VIDEO_URL')) {
+      var cleanCast = VIDEO_URL.replace(/^https?:///, '');
+      var castIntent = 'intent://' + cleanCast + '#Intent;package=com.instantbits.cast.webvideo;scheme=https;end';
+      window.open(castIntent, '_blank');
+    } else {
+      alert('No hay video para transmitir');
     }
   });
 
-  // === Inicializar botón Mi lista al cargar ===
-  (function initListaBtn() {
+  // === Mi lista ===
+  btnLista.addEventListener('click', function() {
+    try {
+      var lista = JSON.parse(localStorage.getItem('miLista')) || [];
+      var pageUrl = window.location.href;
+      var exists = lista.some(m => m.pageUrl === pageUrl);
+
+      if (!exists) {
+        lista.push({
+          titulo: "The Cloverfield Paradox",
+          year: "2018",
+          poster: "https://image.tmdb.org/t/p/w500/hyeJDZxsXatr2XoPtH46NRrQ6aW.jpg",
+          backdrop: "https://image.tmdb.org/t/p/original/2cnUCcNmmj79hGmimvWlUo5P2K8.jpg",
+          sinopsis: "Con la Tierra en guerra y en mitad de una crisis energética, un equipo de astronautas se encuentra en el espacio tratando de dar con una solución a los problemas del planeta. Pero durante una maniobra fallida, quedan flotando sin saber muy bien qué o cómo volver a su lugar de origen, y las cosas dentro de la nave ocultan una realidad mucho más terrorífica.",
+          pageUrl: pageUrl,
+          addedAt: new Date().toISOString()
+        });
+        localStorage.setItem('miLista', JSON.stringify(lista));
+        btnLista.querySelector('i').classList.replace('fa-plus', 'fa-check');
+        btnLista.querySelector('span').textContent = 'Añadido';
+      } else {
+        lista = lista.filter(m => m.pageUrl !== pageUrl);
+        localStorage.setItem('miLista', JSON.stringify(lista));
+        btnLista.querySelector('i').classList.replace('fa-check', 'fa-plus');
+        btnLista.querySelector('span').textContent = 'Mi lista';
+      }
+    } catch(err) {
+      alert('Error al guardar en Mi lista');
+    }
+  });
+
+  // === Inicializar Mi lista ===
+  (function() {
     try {
       var lista = JSON.parse(localStorage.getItem('miLista')) || [];
       if (lista.some(m => m.pageUrl === window.location.href)) {
-        btnLista.querySelector('i').classList.replace('fa-plus','fa-check');
+        btnLista.querySelector('i').classList.replace('fa-plus', 'fa-check');
         btnLista.querySelector('span').textContent = 'Añadido';
       }
-    } catch(err) {}
+    } catch(e) {}
   })();
 
-  // === Modal Info ===
-  btnInfo.addEventListener('click', function() {
-    infoModal.style.display = 'flex';
-  });
-  closeModalBtn.addEventListener('click', function() {
-    infoModal.style.display = 'none';
-  });
-  infoModal.addEventListener('click', function(e) {
-    if (e.target === infoModal) infoModal.style.display = 'none';
-  });
-
-  // === Sinopsis "Ver más / Ver menos" ===
+  // === Ver más / Ver menos ===
   if (synopsisText.textContent.length > maxLength) {
     var full = synopsisText.textContent;
     var short = full.slice(0, maxLength) + '...';
@@ -234,6 +224,14 @@
       expanded = !expanded;
     });
   }
+
+  // === Botón Info (opcional: solo alerta) ===
+  btnInfo.addEventListener('click', function() {
+    alert("Info:
+Título: The Cloverfield Paradox
+Año: 2018
+Géneros: Terror, Suspense, Ciencia ficción");
+  });
 </script>
   <!-- Datos
    Poster Backdrop: https://image.tmdb.org/t/p/original/2cnUCcNmmj79hGmimvWlUo5P2K8.jpg
@@ -241,7 +239,7 @@
    Titulo: The Cloverfield Paradox
    Poster: https://image.tmdb.org/t/p/w500/hyeJDZxsXatr2XoPtH46NRrQ6aW.jpg
    Generos: Terror, Suspense, Ciencia ficción
-   calificacion: 87%
+   calificacion: 85%
    Sinopsis: Con la Tierra en guerra y en mitad de una crisis energética, un equipo de astronautas se encuentra en el espacio tratando de dar con una solución a los problemas del planeta. Pero durante una maniobra fallida, quedan flotando sin saber muy bien qué o cómo volver a su lugar de origen, y las cosas dentro de la nave ocultan una realidad mucho más terrorífica.
    Tiempo: 102 min
    Logo: https://image.tmdb.org/t/p/original/pa7qShs8YSMQvQTpeiaJD2YYU5q.png
