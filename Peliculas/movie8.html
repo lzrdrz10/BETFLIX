@@ -98,9 +98,10 @@
     </div>
   </div>
  <script>
+document.addEventListener("DOMContentLoaded", function() {
   var VIDEO_URL = "https://lzrdrz10.github.io/repro/player.html?video=aHR0cHM6Ly8xYS0xNzkxLmNvbS92aWRlby9md2UyLzg1L3M4LzIvNi8yL0svcS82Mktxei5hYWEubXA0&poster=aHR0cHM6Ly9pbWFnZS50bWRiLm9yZy90L3Avb3JpZ2luYWwvMmNuVUNjTm1tajc5aEdtaW12V2xVbzVQMks4LmpwZw==&title=TGEgUGFyYWRvamEgQ2xvdmVyZmllbGQ=";
   var videodescargador = "https://1a-1791.com/video/fwe2/85/s8/2/6/2/K/q/62Kqz.aaa.mp4";
-  // === Elementos reales que SÍ existen ===
+
   var btnReproducir = document.getElementById('btnReproducir');
   var videoModal = document.getElementById('videoModal');
   var videoFrameModal = document.getElementById('videoFrameModal');
@@ -112,6 +113,7 @@
   var synopsisText = document.getElementById('synopsisText');
   var toggleSynopsis = document.getElementById('toggleSynopsis');
   var maxLength = 200;
+
   // === Reproducir ===
   btnReproducir.addEventListener('click', function() {
     if (!VIDEO_URL || VIDEO_URL.includes('VIDEO_URL')) {
@@ -122,11 +124,13 @@
     videoModal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
   });
+
   closeVideoModal.addEventListener('click', function() {
     videoModal.style.display = 'none';
     videoFrameModal.src = '';
     document.body.style.overflow = '';
   });
+
   videoModal.addEventListener('click', function(e) {
     if (e.target === videoModal) {
       videoModal.style.display = 'none';
@@ -134,6 +138,7 @@
       document.body.style.overflow = '';
     }
   });
+
   // === Descargar ===
   downloadBtn.addEventListener('click', function(e) {
     e.preventDefault();
@@ -148,9 +153,10 @@
     window.location.href = intentPlus;
     setTimeout(() => window.location.href = intentNormal, 1000);
   });
+
   // === Cast ===
   castBtn.addEventListener('click', function() {
-    var castUrl = videodescargador; // Usamos watchUrl para cast, ya que apps como Web Video Cast manejan YouTube bien
+    var castUrl = videodescargador;
     if (!castUrl || castUrl.includes('example.com')) {
       alert('No hay video para transmitir');
       return;
@@ -159,6 +165,7 @@
     var castIntent = 'intent://' + cleanCast + '#Intent;package=com.instantbits.cast.webvideo;scheme=https;end';
     window.open(castIntent, '_blank');
   });
+
   // === Mi lista ===
   btnLista.addEventListener('click', function() {
     try {
@@ -188,6 +195,7 @@
       alert('Error al guardar en Mi lista');
     }
   });
+
   // === Inicializar Mi lista ===
   (function() {
     try {
@@ -198,6 +206,7 @@
       }
     } catch(e) {}
   })();
+
   // === Ver más / Ver menos ===
   if (synopsisText.textContent.length > maxLength) {
     var full = synopsisText.textContent;
@@ -211,13 +220,12 @@
       expanded = !expanded;
     });
   }
-  // === Botón Info (opcional: solo alerta) ===
+
+  // === Botón Info ===
   btnInfo.addEventListener('click', function() {
-    alert("Info:
-Título: The Cloverfield Paradox
-Año: 2018
-Géneros: Terror, Suspense, Ciencia ficción");
+    alert("Info:\nTítulo: The Cloverfield Paradox\nAño: 2018\nGéneros: Terror, Suspense, Ciencia ficción");
   });
+});
 </script>
   <!-- Datos
    Poster Backdrop: https://image.tmdb.org/t/p/original/2cnUCcNmmj79hGmimvWlUo5P2K8.jpg
